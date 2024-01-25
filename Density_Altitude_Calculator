@@ -1,0 +1,26 @@
+clear,clc
+% Leah Newton AERE 161 Project 1
+% calculating air density altitude
+% inserting known information
+key = '7cab1fcaf444883263bc48dd983e6018';
+options = weboptions('ContentType','json');
+url=['https://api.openweathermap.org/data/2.5/weather?q=','Ames','&APPID=',key];
+CurrentData = webread(url, options);
+% creating temp, pressure, and humidity variables
+temp = CurrentData.main.temp;
+pressure = CurrentData.main.pressure;
+humidity = CurrentData.main.humidity;
+tempC = Kelvin2Celsius(temp); % converting kelvin to celsius by calling a function
+dewpoint = tempC-((100-humidity)/5); % calculating dewpoint
+vaporpressure = 6.11*10^((7.5*dewpoint)/(237.7+dewpoint)); % calculating vapor pressure
+virtualtemp = (temp/(1-(vaporpressure/pressure)*(1-0.622))); % calculating virtual temp
+virtualtempR = (((9/5)*(virtualtemp-273.15)+32)+459.69); % calculating virtual temp in rankine
+pressureinHG = pressure*0.02953; % calculating pressure in mercury
+fieldelv = 955.6; % field elevation of Ames Airport (ft)
+densityaltitude = fieldelv + (145366*(1-((17.326*pressureinHG)/virtualtempR)^0.235)); % calculating the density altitude
+fprintf('The dewpoint is %g deg C \n', dewpoint) % printing the value for dewpoint
+fprintf('The vapor pressure is %g millibars \n', vaporpressure) % printing the value for vapor pressure
+fprintf('The virtual temperature is %g K \n', virtualtemp) % printing the value for the virtual temp in Kelvin
+fprintf('The virtual temperature is %g Rankine \n', virtualtempR) % printing the value for virtual temp in Rankine
+fprintf('The pressure is %g HG \n\n', pressureinHG) % printing the value for pressure in millimeters of mercury
+fprintf('The density altitude is %g ft \n', densityaltitude) % printing the value density altitude
