@@ -1,0 +1,46 @@
+clear,clc,clf
+% AERE 161 Extra Credit Homework
+% Leah Newton
+% Purpose:to calculate a flight path of a projectile and graph it
+g = 9.81; % gravitational constant, in m/s^2
+dt = 0.5; % time step in s
+v0 = 300; % intitial velocity, in m/s
+theta = 60; % launch angle, in degrees
+U = v0*cosd(theta); % the initial velocity multiplied by the cosine of 60 
+degrees
+V = v0*sind(theta); % the initial velocity multiplied by the sine of 60 
+degrees
+t = 0; % time=0
+i = 1; % index starts at 1
+% first elements in arrays
+y(1) = 0; 
+x(1) = 0;
+u(1) = U;
+v(1) = V;
+T(1) = t;
+figure(1) % plot 1
+plot3(x(i),t,y(i)) % plots first point
+title('Projectile Motion (No Air Resistance)') % title of the graph
+xlabel('Horizontal Distance (m)') % x axis label of the graph
+ylabel('Time (s)') % y axis label of the graph
+zlabel('Vertical Distance (m)') % z axis label of the graph
+grid on
+hold on
+while y(i) >= 0 % Calculate the flight path while the projectile is airborne
+ t = t + dt; % giving time a way to progress
+ i=i+1; % giving the equations a way to progress
+ x(i) = U*t; % horizontal distance (x) of the projectile, in m
+ y(i) = -1/2*g*t^2+V*t; % altitude (y) of the projectile, in m
+ u(i) = U; % equation of the velocity in the horizontal direction, in m/s
+ v(i) = -g*t+V; % equation of velocity in the vertical direction, in m/s
+ T(i) = t; % time array in seconds
+plot3(x(i),T(i),y(i),'r.') % plots one point at a time as a red dot
+pause(0.05) % pause for 0.05 seconds after each point
+end % ends while loop
+[maxy,index] = max(y); % determine the max height
+stem3(x(index),T(index),maxy,'ok') % creates a stem 3 plot, a 3-D plot of a 
+regular stem graph
+str = sprintf('max height = %g m',max(y)'); % a string that prints the maximum 
+height of the projectile after the data is plotted 
+text(x(index),T(index),str) % displays the label and the max height value
+hold off
