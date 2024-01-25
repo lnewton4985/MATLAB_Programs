@@ -1,0 +1,58 @@
+clear,clc
+% Leah Newton AERE 161 Project 1
+% Create a weight and balance calculator for a Piper PA-28-180 aircraft
+% known variables
+empty_weight = 1471; %lbs
+center_of_gravity = 85.9; %in
+front_seats_moment_arm = 85.5; %in
+fuel_tanks_moment_arm = 95; %in
+rear_seats_moment_arm = 118.1; %in
+max_ramp_weight = 2400; %lbs
+max_fuel = 50; % U.S gal
+% creating a loop to keep the program running
+loop = 2; % when user enters 2, the loop will run
+while loop ~=1 % if the user enters 1, the loop will not run
+    fprintf('Welcome to the Weight & Balance Calculator \nThis calculator is for a Piper PA-28-180 aircraft \n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ \nPlease answer the following questions to the best of your ability: \n') % hello message 
+    fuel = input('How much fuel is on board (in US Gallons)? \n');  % asking user for a fuel number
+    if fuel > max_fuel % makes sure fuel value is no greater than 50 gallons
+        disp('Error: not valid. Please enter a value for fuel that is less than or equal to 50lbs: '); % error message is fuel number is greater than 50
+    end
+    % asking user for different weight inputs
+    pilot_weight = userinput('What is the weight of the pilot (in lbs)? \n');
+    co_pilot_weight = userinput('What is the weight of the co-pilot (in lbs)? \n');
+    passenger1_weight = userinput('What is the weight of passenger one? (If no passenger enter 0) \n');
+    passenger2_weight = userinput('What is the weight of passenger two? (If no passenger enter 0) \n');
+    % calculating fuel weight depending on user input
+    fuel_weight = fuel*6;
+    % calculating ramp weight 
+    ramp_weight = pilot_weight+co_pilot_weight+passenger1_weight+passenger2_weight+fuel_weight+empty_weight;
+    if ramp_weight>max_ramp_weight % making sure weight does not exceed the maximum value
+        disp('Error, the ramp weight exceeds the max weight. Please press try again') 
+    end
+    % calculating the moment for each area of the aircraft
+    moment_front_seats = (pilot_weight+co_pilot_weight)*front_seats_moment_arm;
+    moment_fuel_tanks = fuel_weight*fuel_tanks_moment_arm;
+    moment_rear_seats = (passenger1_weight+passenger2_weight)*rear_seats_moment_arm;
+    moment_empty = center_of_gravity*empty_weight;
+    % calculating moment arm
+    total_moment = moment_front_seats+moment_fuel_tanks+moment_rear_seats+moment_empty;
+    moment_arm = total_moment/ramp_weight;
+    fprintf('\n\nTotal fuel weight: %g lbs \n', fuel_weight) % printing the total fuel weight
+    fprintf('Total weight: %g lbs \n', ramp_weight) % printing the total aircraft weight
+    fprintf('Front seats moment: %g lbs-in \n', moment_front_seats) % printing the front seats moment
+    fprintf('Rear seats moment: %g lbs-in \n', moment_rear_seats) % printing the rear seats moment
+    fprintf('Fuel moment: %g lbs-in \n', moment_fuel_tanks) % printing the fuel tank moment
+    fprintf('Empty aircraft moment: %g lbs-in \n', moment_empty) % printing the empty moment
+    fprintf('The total moment arm is %g inches \n\n',moment_arm) % rpinting the total moment arm
+    if moment_arm>86.8 && moment_arm<95.8 % making sure the moment arm is within range
+        disp('The aircraft is within weight and balance.') % within range
+    else
+        disp('The aircraft is not within weight and balance and should not be flown.') % not within range
+    end
+    loop = input('Would you like to run the calculator again? (Press 2 for yes or 1 for no):\n '); % asking the user if they want to run it again
+    if loop == 1 % end program
+        disp('Thank you for using the Weight and Balance calculator. The program will stop running now, have a good day!')
+    elseif loop == 2 % reset program
+        fprintf('Resetting the program \n')
+    end
+end
